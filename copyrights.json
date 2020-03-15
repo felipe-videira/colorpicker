@@ -1,0 +1,17 @@
+[
+    { 
+        "copyright": "Music",
+        "owner": "Komiku",
+        "displayColor": "#E64C3C"
+    },
+    { 
+        "copyright": "SFX",
+        "owner": "SubspaceAudio",
+        "displayColor": "#F1C431"
+    },
+    { 
+        "copyright": "Concept",
+        "owner": "RisingStack",
+        "displayColor": "#3998DB"
+    }
+]

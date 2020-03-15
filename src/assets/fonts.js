@@ -1,0 +1,1 @@
+export const dogbyte = require('assets/fonts/dogbyte.otf'); 
