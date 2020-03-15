@@ -1,1 +1,1 @@
-export const dogbyte = require('assets/fonts/dogbyte.otf'); 
+export const mainFont = require('assets/fonts/dogbyte.otf');

@@ -9,6 +9,16 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  texts: {
+    color: "#fff",
+    fontFamily: "mainFont",
+    fontSize: 20,
+    margin: 10
+  },
+  tutorialText: {
+    fontSize: 30,
+    marginTop: 10
+  },
   tilesContainer: {
     height: width * 0.875,
     width: width * 0.875,

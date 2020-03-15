@@ -2,24 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import { generateRGB, mutateRGB, randomInt } from '@/utils';
+import gameConfig from 'gameConfig';
 
-export default function Game() {
+
+export default function Game({ navigation }) {
 
   const [loading, setLoading] = useState(true);
-  const [points, setPoints] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(15);
-  const [size, setSize] = useState({ x: 2, y: 2 });
+  const [showTutorial, setShowTutorial] = useState(true);
+  const [points, setPoints] = useState(gameConfig.initialPoints);
+  const [timeLeft, setTimeLeft] = useState(gameConfig.initialTime);
+  const [size, setSize] = useState({
+    x: gameConfig.initialSizeX,
+    y: gameConfig.initialSizeY
+  });
   const [rgb, setRgb] = useState();
   const [diffRgb, setDiffRgb] = useState();
   const [diffTile, setDiffTile] = useState({ x: 0, y: 0 });
 
-  let interval;
-
 
   const onTilePressed = (x, y) => {
-    console.log(x, y);
-    console.log(diffTile.x, diffTile.y);
-    diffTile.x === x && diffTile.y === y && newRound();
+    const correctTile = diffTile.x === x && diffTile.y === y;
+    setTimeLeft(timeLeft + (correctTile ? gameConfig.timeIncrement : gameConfig.timeDecrement));
+    setPoints(points + (correctTile ? gameConfig.pointsIncrement : gameConfig.pointsDecrement));
+
+    console.log(points);
+    console.log(timeLeft);
+
+    correctTile && newRound();
   }
 
   const generateTiles = (sX = 2, sY = 2, currRgb, dRgb, dTile) => {
@@ -59,9 +68,10 @@ export default function Game() {
   const newRound = () => {
     try {
       setLoading(true);
+      const { minTileSize, maxTileSize } = gameConfig;
       const rgb = generateRGB();
       const mRgb = mutateRGB(rgb, 10, 100);
-      const size = generateSize(points);
+      const size = generateSize(points, minTileSize, maxTileSize);
       setRgb(rgb);
       setSize(size);
       setDiffRgb(mRgb);
@@ -71,29 +81,37 @@ export default function Game() {
     }
   }
 
-  const initTimer = () => {
-    interval = setInterval(() => {
-      setTimeLeft(timeLeft - 1);
-    }, 1000)
+  const countTime = () => {
+    setTimeLeft(timeLeft => Math.max(timeLeft - 1, 0));
   }
 
-  const clearTimer = () => {
-    clearInterval(interval);
-  }
-
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      navigation.navigate("Home");
+    }
+  }, [timeLeft])
 
   useEffect(() => {
     newRound();
-    initTimer();
+
+    const interval = setInterval(countTime, 1000);
+
+    setTimeout(() => {
+      setShowTutorial(false);
+    }, 5000)
 
     return () => {
-      clearTimer();
+      clearInterval(interval);
     }
   }, [])
 
 
   return (
     <View style={styles.container}>
+      <Text style={styles.texts}>{`${points} points`}</Text>
+      <Text style={styles.texts}>{`${timeLeft}s left`}</Text>
+      {showTutorial && <Text style={[styles.texts, styles.tutorialText]}>{`who is different?`}</Text>}
+
       <View style={styles.tilesContainer}>
         {!loading && generateTiles(size.x, size.y, rgb, diffRgb, diffTile)}
       </View>

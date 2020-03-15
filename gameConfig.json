@@ -1,0 +1,12 @@
+{
+  "minTileSize": 2,
+  "maxTileSize": 5,
+  "pointsIncrement": 1,
+  "pointsDecrement": 0,
+  "timeIncrement": 1,
+  "timeDecrement": -5,
+  "initialPoints": 0,
+  "initialTime": 15,
+  "initialSizeX": 2,
+  "initialSizeY": 2
+}

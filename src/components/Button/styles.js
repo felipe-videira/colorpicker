@@ -10,7 +10,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     fontSize: 45,
-    fontFamily: 'dogbyte',
+    fontFamily: "mainFont",
     color: '#ecf0f1',
     marginTop: 5,
   },

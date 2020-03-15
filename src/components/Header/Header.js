@@ -11,7 +11,7 @@ function Header({ style }) {
       <Text style={[styles.headerText, { color: '#F1C431' }]}>l</Text>
       <Text style={[styles.headerText, { color: '#68CC73' }]}>o</Text>
       <Text style={[styles.headerText, { color: '#3998DB' }]}>r</Text>
-      <Text style={styles.headerText}>blinder</Text>
+      <Text style={styles.headerText}>picker</Text>
     </View>
   );
 }

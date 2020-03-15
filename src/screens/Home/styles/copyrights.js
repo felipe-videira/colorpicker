@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   copyrightsText: {
     fontSize: 16,
-    fontFamily: 'dogbyte',
+    fontFamily: 'mainFont',
     marginBottom: 2.5,
   },
 });

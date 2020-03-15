@@ -13,7 +13,7 @@ export default StyleSheet.create({
   },
   hiScoreText: {
     fontSize: 28.5,
-    fontFamily: 'dogbyte',
+    fontFamily: 'mainFont',
     color: '#ecf0f1',
     marginTop: 5,
   },

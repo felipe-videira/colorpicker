@@ -9,6 +9,7 @@ module.exports = (api) => {
           alias: {
             assets: './assets',
             copyrights: './copyrights.json',
+            gameConfig: './gameConfig.json',
             '@': './src',
           },
         },
