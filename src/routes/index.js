@@ -13,6 +13,9 @@ export default function Routes() {
       <Stack.Navigator
         initialRouteName="Home"
         headerMode="none"
+        screenOptions={{
+          gestureEnabled: false
+        }}
       >
         <Stack.Screen
           name="Home"

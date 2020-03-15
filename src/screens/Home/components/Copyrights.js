@@ -6,9 +6,12 @@ import styles from '../styles/copyrights';
 
 export default function Copyrights() {
   return (
-    <View style={styles.copyrightsContainer}>
-      {copyrights.map((o) => (
-        <Text style={[styles.copyrightsText, { color: o.displayColor }]}>
+    <View style={styles.copyrightsContainer} >
+      {copyrights.map((o, i) => (
+        <Text
+          key={i}
+          style={[styles.copyrightsText, { color: o.displayColor }]}
+        >
           {`${o.copyright}: ${o.owner}`}
         </Text>
       ))}

@@ -9,12 +9,12 @@ import styles from './styles';
 import HiScore from './components/HiScore';
 import Copyrights from './components/Copyrights';
 
-export default function Home() {
+export default function Home({ navigation }) {
   const [hiscore] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
 
   const onPlayPress = () => {
-    console.log('onPlayPress event handler');
+    navigation.navigate("Game");
   };
 
   const onLeaderboardPress = () => {

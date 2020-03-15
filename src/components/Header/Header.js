@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -17,7 +17,7 @@ function Header({ style }) {
 }
 
 Header.propTypes = {
-  style: PropTypes.objectOf(StyleSheet),
+  style: ViewPropTypes.style,
 };
 
 Header.defaultProps = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Text, TouchableOpacity, Image, StyleSheet,
+  Text, TouchableOpacity, Image, ViewPropTypes
 } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './styles';
@@ -25,7 +25,7 @@ Button.propTypes = {
   icon: PropTypes.string,
   text: PropTypes.string,
   onPress: PropTypes.func.isRequired,
-  style: PropTypes.objectOf(StyleSheet),
+  style: ViewPropTypes.style,
   iconSize: PropTypes.number,
 };
 
