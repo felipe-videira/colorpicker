@@ -3,11 +3,23 @@ import { generateRGB, mutateRGB, randomInt } from '../../utils';
 import gameConfig from 'gameConfig';
 import { GAME_STATE } from '../../constants'
 import GameView from './components/GameView';
+import useStateWithGetter from '../../hooks/useStateWithGetter';
+import { gameSoundtrack } from '../../static/music';
+import {
+  buttonTapSound,
+  correctTileTapSound,
+  wrongTileTapSound,
+  pauseInSound,
+  pauseOutSound,
+  loseSound
+} from '../../static/sfx';
+import useMusic from '../../hooks/useMusic';
+import useSFX from '../../hooks/useSFX';
 
 
 export default function Game({ navigation }) {
 
-  const [gameState, setGameState] = useState(GAME_STATE.INGAME);
+  const [gameState, setGameState, getGameState] = useStateWithGetter(GAME_STATE.INGAME);
   const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(gameConfig.initialPoints);
   const [timeLeft, setTimeLeft] = useState(gameConfig.initialTime);
@@ -21,22 +33,43 @@ export default function Game({ navigation }) {
     y: gameConfig.initialSizeY
   });
 
-  const onTilePressed = (x, y) => {
+  const [playMusic, stopMusic, pauseMusic] = useMusic(gameSoundtrack);
+
+  const playButtonTapSound = useSFX(buttonTapSound);
+  const playCorrectTileTapSound = useSFX(correctTileTapSound);
+  const playWrongTileTapSound = useSFX(wrongTileTapSound);
+  const playPauseInSound = useSFX(pauseInSound);
+  const playPauseOutSound = useSFX(pauseOutSound);
+  const playLoseSound = useSFX(loseSound);
+
+
+  const onTilePressed = async (x, y) => {
     const correctTile = distinctTile.x === x && distinctTile.y === y;
 
-    setTimeLeft(Math.max(timeLeft + (correctTile ? gameConfig.timeIncrement : gameConfig.timeDecrement), 0));
+    setTimeLeft(Math.max(timeLeft + (correctTile
+      ? gameConfig.timeIncrement
+      : gameConfig.timeDecrement), 0));
+    setPoints(points + (correctTile
+      ? gameConfig.pointsIncrement
+      : gameConfig.pointsDecrement));
 
-    setPoints(points + (correctTile ? gameConfig.pointsIncrement : gameConfig.pointsDecrement));
+    await correctTile
+      ? playCorrectTileTapSound()
+      : playWrongTileTapSound();
 
     correctTile && generateNewRound();
   }
 
-  const onBottomBarPress = () => {
+  const onBottomBarPress = async () => {
     switch (gameState) {
       case GAME_STATE.INGAME:
+        await playPauseInSound();
+        await pauseMusic();
         setGameState(GAME_STATE.PAUSED);
         break;
       case GAME_STATE.PAUSED:
+        await playPauseOutSound();
+        await playMusic();
         setGameState(GAME_STATE.INGAME);
         break;
       case GAME_STATE.LOST:
@@ -45,16 +78,25 @@ export default function Game({ navigation }) {
     }
   }
 
-  const onExitPress = () => {
+  const onExitPress = async () => {
+    await playButtonTapSound();
+    await stopMusic();
     navigation.goBack();
   }
 
-  const resetGame = () => {
+  const onGameLost = async () => {
+    await stopMusic();
+    await playLoseSound();
+    setGameState(GAME_STATE.LOST);
+  }
+
+  //TODO: improve this
+  const resetGame = async () => {
     setPoints(gameConfig.initialPoints);
-
     setTimeLeft(gameConfig.initialTime);
-
     setGameState(GAME_STATE.INGAME);
+
+    await playMusic();
 
     generateNewRound(gameConfig.initialPoints);
   }
@@ -89,13 +131,6 @@ export default function Game({ navigation }) {
     }
   }
 
-  const getGameState = cb => {
-    setGameState(gameState => {
-      cb && typeof cb === 'function' && cb(gameState);
-      return gameState;
-    })
-  }
-
   const countTime = () => {
     getGameState(gameState => {
       setTimeLeft(timeLeft => {
@@ -103,13 +138,14 @@ export default function Game({ navigation }) {
           return timeLeft;
         }
         if (timeLeft <= 0) {
-          setGameState(GAME_STATE.LOST);
+          onGameLost();
           return timeLeft;
         }
         return Math.max(timeLeft - 1, 0)
       });
     })
   }
+
 
   useEffect(() => {
     generateNewRound();
@@ -120,6 +156,7 @@ export default function Game({ navigation }) {
       clearInterval(interval);
     }
   }, []);
+
 
   return (
     <GameView

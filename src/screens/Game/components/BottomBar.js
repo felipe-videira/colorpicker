@@ -52,10 +52,10 @@ export default function BottomBar ({
           icon={gameState === GAME_STATE.INGAME
             ? pauseIcon
             : gameState === GAME_STATE.PAUSED
-            ? playIcon
-            : replayIcon}
-            onPress={onBottomBarPress}
-            />
+              ? playIcon
+              : replayIcon}
+          onPress={onBottomBarPress}
+        />
       </View>
       {renderSection(timeLeft, i18n.t('timeLeftLabel'), bestTime, timerIcon)}
     </View>

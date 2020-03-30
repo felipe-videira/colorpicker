@@ -32,13 +32,13 @@ export default function HomeView ({
         style={styles.playButton}
       />
       <HiScore value={hiscore} />
-      <Button
+      {onLeaderboardPress && <Button
         icon={leaderboardIcon}
         text={i18n.t('leaderboardBtnText')}
         onPress={onLeaderboardPress}
         style={styles.leaderboardButton}
         iconSize={45}
-      />
+      />}
       <Copyrights data={copyrights} />
       <Button
         icon={soundOn ? speakerOnIcon : speakerOffIcon}
@@ -54,12 +54,13 @@ HomeView.propTypes = {
   soundOn: bool,
   onPlayPress: func.isRequired,
   onToggleSound: func.isRequired,
-  onLeaderboardPress: func.isRequired,
+  onLeaderboardPress: func,
   hiscore: HiScore.propTypes.value,
   copyrights: Copyrights.propTypes.data
 }
 
 HomeView.defaultProps = {
   hiscore: HiScore.defaultProps.value,
-  soundOn: false
+  soundOn: false,
+  onLeaderboardPress: null
 }
