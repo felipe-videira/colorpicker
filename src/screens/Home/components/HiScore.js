@@ -1,18 +1,19 @@
 
 import React from 'react';
-import { scoreIcon } from '@/assets/icons';
+import { scoreIcon } from '../../../static/icons';
 import { View, Text, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from '../styles/hiScore';
+import i18n from 'i18n-js';
 
-function HiScore({ value }) {
+export default function HiScore({ value }) {
   return (
     <View style={styles.hiScoreContainer}>
       <Image
         source={scoreIcon}
         style={styles.hiScoreIcon}
       />
-      <Text style={styles.hiScoreText}>{`Hi-score: ${value}`}</Text>
+      <Text style={styles.hiScoreText}>{`${i18n.t('hiScoreLabel')} ${value}`}</Text>
     </View>
   );
 }
@@ -24,5 +25,3 @@ HiScore.propTypes = {
 HiScore.defaultProps = {
   value: 0,
 };
-
-export default HiScore;

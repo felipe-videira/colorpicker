@@ -10,7 +10,6 @@ module.exports = (api) => {
             assets: './assets',
             copyrights: './copyrights.json',
             gameConfig: './gameConfig.json',
-            '@': './src',
           },
         },
       ],

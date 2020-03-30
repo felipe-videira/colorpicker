@@ -2,8 +2,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeScreen from '@/screens/Home';
-import GameScreen from '@/screens/Game';
+import HomeScreen from './screens/Home';
+import GameScreen from './screens/Game';
 
 const Stack = createStackNavigator();
 

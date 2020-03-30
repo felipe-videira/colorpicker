@@ -1,17 +1,22 @@
 import React from 'react';
 import { Text, View, ViewPropTypes } from 'react-native';
-import PropTypes from 'prop-types';
-import styles from './styles';
+import styles, { letterColors } from './styles';
+import i18n from 'i18n-js';
 
-function Header({ style }) {
+
+export function Header({ style }) {
+  const title = i18n.t('headerTitle');
+
   return (
     <View style={[styles.headerContainer, style]}>
-      <Text style={[styles.headerText, { color: '#E64C3C' }]}>c</Text>
-      <Text style={[styles.headerText, { color: '#E57E31' }]}>o</Text>
-      <Text style={[styles.headerText, { color: '#F1C431' }]}>l</Text>
-      <Text style={[styles.headerText, { color: '#68CC73' }]}>o</Text>
-      <Text style={[styles.headerText, { color: '#3998DB' }]}>r</Text>
-      <Text style={styles.headerText}>picker</Text>
+      {letterColors.map((color, index) => (
+        <Text style={[styles.headerText, { color }]}>
+          {title[index]}
+        </Text>
+      ))}
+      <Text style={styles.headerText}>
+        {title.substr(letterColors.length, title.length)}
+      </Text>
     </View>
   );
 }
@@ -23,5 +28,3 @@ Header.propTypes = {
 Header.defaultProps = {
   style: null,
 };
-
-export default Header;

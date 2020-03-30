@@ -5,15 +5,23 @@ import {
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-function Button({
-  icon, text, onPress, style, iconSize,
+export function Button({
+  icon,
+  text,
+  onPress,
+  style,
+  iconSize,
+  iconStyle
 }) {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
       {icon && (
       <Image
         source={icon}
-        style={[styles.buttonIcon, { height: iconSize, width: iconSize }]}
+        style={[styles.buttonIcon, iconStyle
+          ? iconStyle
+          : { height: iconSize, width: iconSize }
+        ]}
       />
       )}
       {text && <Text style={styles.buttonText}>{text}</Text>}
@@ -27,6 +35,7 @@ Button.propTypes = {
   onPress: PropTypes.func.isRequired,
   style: ViewPropTypes.style,
   iconSize: PropTypes.number,
+  iconStyle: ViewPropTypes.style,
 };
 
 Button.defaultProps = {
@@ -34,6 +43,5 @@ Button.defaultProps = {
   text: null,
   style: null,
   iconSize: 60,
+  iconStyle: null
 };
-
-export default Button;
