@@ -30,7 +30,7 @@ export function Button({
 }
 
 Button.propTypes = {
-  icon: PropTypes.string,
+  icon: PropTypes.number,
   text: PropTypes.string,
   onPress: PropTypes.func.isRequired,
   style: ViewPropTypes.style,

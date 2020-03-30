@@ -10,7 +10,7 @@ export function Header({ style }) {
   return (
     <View style={[styles.headerContainer, style]}>
       {letterColors.map((color, index) => (
-        <Text style={[styles.headerText, { color }]}>
+        <Text key={index} style={[styles.headerText, { color }]}>
           {title[index]}
         </Text>
       ))}
