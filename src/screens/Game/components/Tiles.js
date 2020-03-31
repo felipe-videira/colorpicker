@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../styles/tiles';
-import { View, TouchableOpacity } from 'react-native';
-import { bool, func, exact, number } from 'prop-types';
+import { View, TouchableOpacity, Animated } from 'react-native';
+import { bool, func, exact, number, instanceOf } from 'prop-types';
 
 export default function Tiles({
   size,
@@ -10,11 +10,19 @@ export default function Tiles({
   distinctTile,
   onTilePressed,
   loading,
+  wrongTilePressedAnimation,
 }) {
   if (loading) return null;
 
   return (
-    <View style={styles.tilesContainer}>
+    <Animated.View
+      style={[
+        styles.tilesContainer,
+        { transform: [{
+            translateX: wrongTilePressedAnimation
+        }] }
+      ]}
+    >
       {Array(size.x).fill().map((_, x) => (
         <View style={styles.tileSlot} key={x}>
           {Array(size.y).fill().map((_, y) => {
@@ -36,7 +44,7 @@ export default function Tiles({
           })}
         </View>
       ))}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -60,6 +68,7 @@ Tiles.propTypes = {
     y: number.isRequired
   }),
   onTilePressed: func.isRequired,
+  wrongTilePressedAnimation: instanceOf(Animated.Value),
   loading: bool,
 };
 

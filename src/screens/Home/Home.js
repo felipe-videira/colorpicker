@@ -21,15 +21,14 @@ export default function Home({ navigation }) {
 
 
   const onPlayPress = async () => {
-    await playButtonTapSound();
-    await stopMusic();
+    playButtonTapSound();
+    stopMusic();
 
     navigation.navigate("Game");
   };
 
-  const onSoundToggled = async () => {
-    await soundOn ? stopMusic() : playMusic();
-    await onToggleSound(!soundOn);
+  const onSoundToggled = () => {
+    onToggleSound(!soundOn);
   };
 
 

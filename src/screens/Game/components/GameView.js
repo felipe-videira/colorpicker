@@ -41,6 +41,7 @@ export default function GameView (props) {
             distinctTile={props.distinctTile}
             onTilePressed={props.onTilePressed}
             loading={props.loading}
+            wrongTilePressedAnimation={props.wrongTilePressedAnimation}
           />
         );
       case GAME_STATE.PAUSED:

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
 import { generateRGB, mutateRGB, randomInt } from '../../utils';
 import gameConfig from 'gameConfig';
 import { GAME_STATE } from '../../constants'
@@ -42,34 +43,56 @@ export default function Game({ navigation }) {
   const playPauseOutSound = useSFX(pauseOutSound);
   const playLoseSound = useSFX(loseSound);
 
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+
+
+  const doWrongPressAnimation = () => {
+    const duration = 50;
+    const useNativeDriver = true;
+
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 15, duration, useNativeDriver }),
+      Animated.timing(shakeAnim, { toValue: -15, duration, useNativeDriver }),
+      Animated.timing(shakeAnim, { toValue: 15, duration, useNativeDriver }),
+      Animated.timing(shakeAnim, { toValue: -15, duration, useNativeDriver }),
+      Animated.timing(shakeAnim, { toValue: 0, duration, useNativeDriver })
+     ]).start();
+  }
 
   const onTilePressed = async (x, y) => {
     const correctTile = distinctTile.x === x && distinctTile.y === y;
 
-    setTimeLeft(Math.max(timeLeft + (correctTile
-      ? gameConfig.timeIncrement
-      : gameConfig.timeDecrement), 0));
-    setPoints(points + (correctTile
-      ? gameConfig.pointsIncrement
-      : gameConfig.pointsDecrement));
+    let timeChange;
+    let pointsChange;
 
-    await correctTile
-      ? playCorrectTileTapSound()
-      : playWrongTileTapSound();
+    if (correctTile) {
+      timeChange = gameConfig.timeIncrement;
+      pointsChange = gameConfig.pointsIncrement;
 
-    correctTile && generateNewRound();
+      playCorrectTileTapSound()
+      generateNewRound();
+    } else {
+      timeChange = gameConfig.timeDecrement;
+      pointsChange = gameConfig.pointsDecrement;
+
+      playWrongTileTapSound();
+      doWrongPressAnimation();
+    }
+
+    setTimeLeft(Math.max(timeLeft + timeChange, 0));
+    setPoints(Math.max(points + pointsChange, 0));
   }
 
   const onBottomBarPress = async () => {
     switch (gameState) {
       case GAME_STATE.INGAME:
-        await playPauseInSound();
-        await pauseMusic();
+        playPauseInSound();
+        pauseMusic();
         setGameState(GAME_STATE.PAUSED);
         break;
       case GAME_STATE.PAUSED:
-        await playPauseOutSound();
-        await playMusic();
+        playPauseOutSound();
+        playMusic();
         setGameState(GAME_STATE.INGAME);
         break;
       case GAME_STATE.LOST:
@@ -79,14 +102,14 @@ export default function Game({ navigation }) {
   }
 
   const onExitPress = async () => {
-    await playButtonTapSound();
-    await stopMusic();
+    playButtonTapSound();
+    stopMusic();
     navigation.goBack();
   }
 
   const onGameLost = async () => {
-    await stopMusic();
-    await playLoseSound();
+    stopMusic();
+    playLoseSound();
     setGameState(GAME_STATE.LOST);
   }
 
@@ -96,7 +119,7 @@ export default function Game({ navigation }) {
     setTimeLeft(gameConfig.initialTime);
     setGameState(GAME_STATE.INGAME);
 
-    await playMusic();
+    playMusic();
 
     generateNewRound(gameConfig.initialPoints);
   }
@@ -170,6 +193,7 @@ export default function Game({ navigation }) {
       bestTime={bestTime}
       distinctTile={distinctTile}
       distinctColor={distinctColor}
+      wrongTilePressedAnimation={shakeAnim}
       onTilePressed={onTilePressed}
       onBottomBarPress={onBottomBarPress}
       onExitPress={onExitPress}
